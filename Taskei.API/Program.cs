@@ -1,0 +1,11 @@
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+builder.Services.AddOpenApi();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+//app.UseHttpsRedirection();
+
+app.Run();
