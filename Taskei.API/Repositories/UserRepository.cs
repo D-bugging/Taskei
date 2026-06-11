@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Taskei.API.Data;
 using Taskei.API.Entities;
 
-namespace Taskei.API.Repositories : IUserRepository
+namespace Taskei.API.Repositories
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _context;
         public UserRepository(AppDbContext context)

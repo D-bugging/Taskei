@@ -56,6 +56,8 @@ namespace Taskei.API.Services
         }
         public async Task<TaskItem> CreateAsync(CreateTaskDto dto)
         {
+            if (string.IsNullOrWhiteSpace(dto.Title))
+                throw new Exception("Title is required for creating a task.");
             var taskItem = new TaskItem
             {
                 Title = dto.Title,
