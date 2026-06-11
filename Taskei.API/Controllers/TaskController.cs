@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Taskei.API.DTOs;
 using Taskei.API.Services;
 
 namespace Taskei.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class TaskController : ControllerBase

@@ -8,5 +8,9 @@ namespace Taskei.API.Entities
         public bool IsCompleted { get; set; }
         public int Priority { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        // Foreign key to User
+        public int UserId { get; set; }
+        public User User { get; set; } = null!;
     }
 }
