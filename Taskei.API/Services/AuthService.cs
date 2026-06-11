@@ -2,11 +2,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Taskei.API.Data;
 using Taskei.API.DTOs;
 using Taskei.API.Entities;
+using Taskei.API.Repositories;
 
 namespace Taskei.API.Services
 {
@@ -14,17 +13,17 @@ namespace Taskei.API.Services
     {
         private readonly PasswordHasher<User> _passwordHasher;
         private readonly IConfiguration _configuration;
-        private readonly AppDbContext _context;
-        public AuthService(IConfiguration configuration, AppDbContext context)
+        private readonly IUserRepository _userRepository;
+        public AuthService(IConfiguration configuration, IUserRepository userRepository)
         {
             _configuration = configuration;
-            _context = context;
+            _userRepository = userRepository;
             _passwordHasher = new PasswordHasher<User>();
         }
 
         public async Task<string?> LoginAsync(LoginDto dto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == dto.Username);
+            var user = await _userRepository.GetByUsernameAsync(dto.Username);
             if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password) || user == null)
                 return null;
 

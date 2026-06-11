@@ -1,17 +1,17 @@
 using Microsoft.EntityFrameworkCore;
-using Taskei.API.Data;
 using Taskei.API.DTOs;
 using Taskei.API.Entities;
+using Taskei.API.Repositories;
 
 namespace Taskei.API.Services
 {
     public class TaskService : ITaskService
     {
-        private readonly AppDbContext _context;
+        private readonly ITaskRepository _repository;
 
-        public TaskService(AppDbContext context)
+        public TaskService(ITaskRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         public async Task<PagedResult<TaskItem>> GetAllAsync(FilterTaskDto filter)
@@ -20,7 +20,7 @@ namespace Taskei.API.Services
             filter.PageSize = filter.PageSize <= 0 ? 10 : filter.PageSize;
             filter.PageSize = filter.PageSize > 100 ? 100 : filter.PageSize;
 
-            var query = _context.TaskItems.AsQueryable();
+            var query = (await _repository.GetAllAsync()).AsQueryable();
 
             // By Status
             if (filter.IsCompleted.HasValue)
@@ -52,7 +52,7 @@ namespace Taskei.API.Services
 
         public async Task<TaskItem?> FindAsync(int id)
         {
-            return await _context.TaskItems.FindAsync(id);
+            return await _repository.GetByIdAsync(id);
         }
         public async Task<TaskItem> CreateAsync(CreateTaskDto dto)
         {
@@ -62,16 +62,12 @@ namespace Taskei.API.Services
                 Description = dto.Description,
                 Priority = dto.Priority
             };
-
-            _context.TaskItems.Add(taskItem);
-            await _context.SaveChangesAsync();
-
-            return taskItem;
+            return await _repository.AddAsync(taskItem);
         }
 
         public async Task<TaskItem?> UpdateAsync(int id, UpdateTaskDto dto)
         {
-            var taskItem = await _context.TaskItems.FindAsync(id);
+            var taskItem = await _repository.GetByIdAsync(id);
             if (taskItem == null)
                 return null;
 
@@ -83,18 +79,17 @@ namespace Taskei.API.Services
             if (taskItem.IsCompleted && string.IsNullOrWhiteSpace(taskItem.Title))
                 throw new Exception("Completed tasks must have a title.");
 
-            await _context.SaveChangesAsync();
+            await _repository.UpdateAsync(taskItem);
             return taskItem;
         }
 
         public async Task<TaskItem?> DeleteAsync(int id)
         {
-            var taskItem = await _context.TaskItems.FindAsync(id);
+            var taskItem = await _repository.GetByIdAsync(id);
             if (taskItem == null)
                 return null;
 
-            _context.TaskItems.Remove(taskItem);
-            await _context.SaveChangesAsync();
+            await _repository.DeleteByIdAsync(id);
             return taskItem;
         }
     }
