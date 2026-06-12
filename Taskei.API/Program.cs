@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -6,6 +7,7 @@ using Taskei.API.Data;
 using Taskei.API.Mappings;
 using Taskei.API.Repositories;
 using Taskei.API.Services;
+using Taskei.API.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -58,6 +60,11 @@ builder.Services.AddScoped<ITaskService, TaskService>();
 
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+// FluentValidation
+builder.Services.AddValidatorsFromAssemblyContaining<CreateTaskDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateTaskDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
 
 var app = builder.Build();
 
