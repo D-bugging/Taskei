@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Taskei.API.Data;
+using Taskei.API.Mappings;
 using Taskei.API.Repositories;
 using Taskei.API.Services;
 
@@ -50,6 +51,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     };
 });
 
+builder.Services.AddAutoMapper(typeof(TaskProfile));
 // Dependency Injection
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITaskService, TaskService>();

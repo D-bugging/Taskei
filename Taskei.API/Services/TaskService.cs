@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Taskei.API.DTOs;
 using Taskei.API.Entities;
@@ -8,10 +9,12 @@ namespace Taskei.API.Services
     public class TaskService : ITaskService
     {
         private readonly ITaskRepository _repository;
+        private readonly IMapper _mapper;
 
-        public TaskService(ITaskRepository repository)
+        public TaskService(ITaskRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         public async Task<PagedResult<TaskItem>> GetAllAsync(FilterTaskDto filter)
@@ -58,12 +61,7 @@ namespace Taskei.API.Services
         {
             if (string.IsNullOrWhiteSpace(dto.Title))
                 throw new Exception("Title is required for creating a task.");
-            var taskItem = new TaskItem
-            {
-                Title = dto.Title,
-                Description = dto.Description,
-                Priority = dto.Priority
-            };
+            var taskItem = _mapper.Map<TaskItem>(dto);
             return await _repository.AddAsync(taskItem);
         }
 
@@ -73,10 +71,7 @@ namespace Taskei.API.Services
             if (taskItem == null)
                 return null;
 
-            taskItem.Title = dto.Title;
-            taskItem.Description = dto.Description;
-            taskItem.IsCompleted = dto.IsCompleted;
-            taskItem.Priority = dto.Priority;
+            _mapper.Map(dto, taskItem);
 
             if (taskItem.IsCompleted && string.IsNullOrWhiteSpace(taskItem.Title))
                 throw new Exception("Completed tasks must have a title.");
