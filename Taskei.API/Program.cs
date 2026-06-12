@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Taskei.API.Data;
-using Taskei.API.Mappings;
-using Taskei.API.Repositories;
-using Taskei.API.Services;
-using Taskei.API.Validators;
+using Taskei.Infrastructure.Data;
+using Taskei.Application.Mappings;
+using Taskei.Infrastructure.Repositories;
+using Taskei.Application.Services;
+using Taskei.Application.Validators;
+using Taskei.Domain.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

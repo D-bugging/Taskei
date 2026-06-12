@@ -1,6 +1,0 @@
-@Taskei.API_HostAddress = http://localhost:5010
-
-GET {{Taskei.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

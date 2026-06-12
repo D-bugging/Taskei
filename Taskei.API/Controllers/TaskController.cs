@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Taskei.API.DTOs;
-using Taskei.API.Services;
+using Taskei.Application.DTOs;
+using Taskei.Application.Services;
 
 namespace Taskei.API.Controllers
 {
