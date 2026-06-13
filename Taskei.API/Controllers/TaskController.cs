@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Taskei.Application.DTOs;
@@ -36,7 +37,8 @@ namespace Taskei.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateTaskDto dto)
         {
-            var task = await _service.CreateAsync(dto);
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var task = await _service.CreateAsync(dto, userId);
             return Created("Task created successfully.", task);
         }
 

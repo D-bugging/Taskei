@@ -8,7 +8,7 @@ namespace Taskei.Application.Services
     {
         Task<PagedResult<TaskItem>> GetAllAsync(FilterTaskDto filter);
         Task<TaskItem?> FindAsync(int id);
-        Task<TaskItem> CreateAsync(CreateTaskDto dto);
+        Task<TaskItem> CreateAsync(CreateTaskDto dto, int userId);
         Task<TaskItem?> UpdateAsync(int id, UpdateTaskDto dto);
         Task<TaskItem?> DeleteAsync(int id);
     }

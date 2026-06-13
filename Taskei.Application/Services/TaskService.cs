@@ -38,12 +38,12 @@ namespace Taskei.Application.Services
             if (!string.IsNullOrWhiteSpace(filter.Search))
                 query = query.Where(t => t.Title.Contains(filter.Search) || t.Description.Contains(filter.Search));
 
-            var totalRecords = await query.CountAsync();
-            var tasks = await query
+            var totalRecords = query.Count();
+            var tasks = query
                 .OrderBy(t => t.Id)
                 .Skip((filter.Page - 1) * filter.PageSize)
                 .Take(filter.PageSize)
-                .ToListAsync();
+                .ToList();
 
             return new PagedResult<TaskItem>
             {
@@ -58,11 +58,12 @@ namespace Taskei.Application.Services
         {
             return await _repository.GetByIdAsync(id);
         }
-        public async Task<TaskItem> CreateAsync(CreateTaskDto dto)
+        public async Task<TaskItem> CreateAsync(CreateTaskDto dto, int userId)
         {
             if (string.IsNullOrWhiteSpace(dto.Title))
                 throw new Exception("Title is required for creating a task.");
             var taskItem = _mapper.Map<TaskItem>(dto);
+            taskItem.UserId = userId;
             return await _repository.AddAsync(taskItem);
         }
 
